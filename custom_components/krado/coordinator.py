@@ -30,12 +30,12 @@ class KradoCoordinator(DataUpdateCoordinator[list[dict[str, Any]]]):
             update_interval=timedelta(minutes=5),
             always_update=False,
         )
-        self._client = client
+        self.client = client
 
     async def _async_update_data(self) -> list[dict[str, Any]]:
         try:
             async with async_timeout.timeout(10):
-                data = await self._client.query_plants()
+                data = await self.client.query_plants()
         except Exception as ex:
             raise UpdateFailed("Couldn't read from Krado") from ex
         if data is None:

@@ -30,6 +30,10 @@ class Krado:
         """Return the token, if any."""
         return self._token
 
+    async def close(self) -> None:
+        """Close the client transport."""
+        await self._client.close_async()
+
     async def login(self, email: str, password: str) -> None:
         """Login."""
         query = gql(

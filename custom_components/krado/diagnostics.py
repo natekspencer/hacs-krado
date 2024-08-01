@@ -5,11 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 from homeassistant.components.diagnostics.util import async_redact_data
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN
-from .coordinator import KradoCoordinator
+from . import KradoConfigEntry
 
 TO_REDACT = {
     "id",
@@ -18,8 +16,7 @@ TO_REDACT = {
 
 
 async def async_get_config_entry_diagnostics(
-    hass: HomeAssistant, entry: ConfigEntry
+    hass: HomeAssistant, entry: KradoConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-    coordinator: KradoCoordinator = hass.data[DOMAIN][entry.entry_id]
-    return async_redact_data(coordinator.data, TO_REDACT)
+    return async_redact_data(entry.runtime_data.data, TO_REDACT)

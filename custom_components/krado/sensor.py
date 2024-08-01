@@ -11,12 +11,11 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from . import KradoConfigEntry
 from .coordinator import KradoCoordinator
 from .entity import KradoEntity
 
@@ -24,10 +23,12 @@ PLANT_MEASUREMENT_STATUS_LIST = ["Low", "Good", "High"]
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+    hass: HomeAssistant,
+    entry: KradoConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Krado sensors using config entry."""
-    coordinator: KradoCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator: KradoCoordinator = entry.runtime_data
     async_add_entities(
         [
             KradoSensorEntity(coordinator, descriptor, plant["id"])
