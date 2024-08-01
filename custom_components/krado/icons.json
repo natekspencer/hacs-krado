@@ -1,0 +1,31 @@
+{
+  "entity": {
+    "sensor": {
+      "humidity_status": {
+        "default": "mdi:water-percent-alert",
+        "state": { "Good": "mdi:water-percent" }
+      },
+      "light": {
+        "default": "mdi:weather-sunny"
+      },
+      "light_status": {
+        "default": "mdi:weather-sunny-alert",
+        "state": { "Good": "mdi:weather-sunny" }
+      },
+      "moisture": {
+        "default": "mdi:water"
+      },
+      "moisture_status": {
+        "default": "mdi:water-alert",
+        "state": { "Good": "mdi:water" }
+      },
+      "signal": {
+        "default": "mdi:wifi"
+      },
+      "temperature_status": {
+        "default": "mdi:thermometer-alert",
+        "state": { "Good": "mdi:thermometer" }
+      }
+    }
+  }
+}

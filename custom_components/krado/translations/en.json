@@ -1,0 +1,57 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host"
+        }
+      },
+      "reauth_confirm": {
+        "data": {}
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_host": "Invalid hostname or IP address",
+      "timeout_connect": "Timeout establishing connection",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reauth_successful": "Re-authentication was successful",
+      "reconfigure_successful": "Re-configuration was successful"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid authentication"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "humidity_status": { "name": "Humidity status" },
+      "last_analyzed": { "name": "Last analyzed" },
+      "last_reading": { "name": "Last reading" },
+      "light": { "name": "Light" },
+      "light_status": { "name": "Light status" },
+      "moisture": { "name": "Moisture" },
+      "moisture_status": { "name": "Moisture status" },
+      "signal": { "name": "Signal" },
+      "temperature_status": { "name": "Temperature status" }
+    }
+  }
+}

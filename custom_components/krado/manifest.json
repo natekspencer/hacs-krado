@@ -1,0 +1,12 @@
+{
+  "domain": "krado",
+  "name": "Krado",
+  "codeowners": ["@natekspencer"],
+  "config_flow": true,
+  "documentation": "https://github.com/natekspencer/hacs-krado",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/natekspencer/hacs-krado/issues",
+  "loggers": ["custom_components.krado"],
+  "version": "0.0.0"
+}

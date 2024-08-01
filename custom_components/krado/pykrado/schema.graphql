@@ -1,0 +1,1006 @@
+"""
+Requires that exactly one field must be supplied and that field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+type AuthType {
+  errors: Errors
+  token: String!
+  user: User!
+}
+
+type BillingNoticeDunning implements NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+type BlogPost {
+  externalUrl: String!
+  id: ID!
+  imageUrl: String!
+  postedAt: ISO8601DateTime!
+  title: String!
+}
+
+type ClientConfig {
+  clientVersion: ClientVersion
+  routes: Routes!
+  tutorials: Hash!
+  updateRequired: Boolean! @deprecated(reason: "Moved to clientVersion")
+}
+
+type ClientVersion {
+  build: Int!
+  force: Boolean!
+  id: ID!
+  releaseDate: String!
+  version: String!
+}
+
+type ContentItem {
+  backgroundColor: String
+  color: String
+  externalUrl: String
+  id: ID!
+  imageUrl: String
+  title: String
+}
+
+type ContentModule {
+  items: [ContentItem!]!
+  kind: String!
+  position: Int!
+  title: String
+}
+
+type CustomerPortal {
+  id: ID!
+  returnUrl: String!
+  url: String!
+}
+
+type Errors {
+  details: String!
+  fullMessages: [String!]!
+}
+
+type Hardware {
+  id: ID!
+  serialNumber: String!
+  usersCount: Int!
+}
+
+scalar Hash
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime
+
+type InstagramPostType {
+  externalUrl: String!
+  id: ID!
+  imageUrl: String!
+  postedAt: ISO8601DateTime!
+  title: String
+}
+
+type JournalEntry {
+  body: String
+  date: ISO8601DateTime!
+  healthAssessment: String!
+  id: ID!
+  imageFullsizeUrl: String!
+  imageThumbnailUrl: String!
+  plant: Plant!
+}
+
+"""
+The connection type for JournalEntry.
+"""
+type JournalEntryConnection {
+  """
+  A list of edges.
+  """
+  edges: [JournalEntryEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [JournalEntry]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type JournalEntryEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: JournalEntry
+}
+
+type KeysAndCertificates {
+  certificateArn: String!
+  certificatePem: String!
+  host: String!
+  privateKey: String!
+  rootCa: String!
+  thingArn: String!
+}
+
+type LegacySubscriptionPlan {
+  description: String!
+  displayName: String!
+  id: String!
+}
+
+type LegacySubscriptionsNoticePhaseOut implements NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+type Message {
+  message: String!
+  type: String
+}
+
+type Mutation {
+  confirmAccount(token: String!): User
+  confirmUser(id: String!): User
+  connectSensor(
+    plantId: String!
+    serialNumber: String!
+    geoLatLng: [Float!]!
+    geoAltitude: Float
+    certificateArn: String!
+    thingArn: String!
+  ): Sensor
+  createClientVersion(
+    version: String!
+    build: Int!
+    releaseDate: String!
+    force: Boolean
+  ): ClientVersion
+  createHelpRequest(description: String!): Message
+  createJournalEntry(
+    plantId: String!
+    date: String!
+    body: String
+    healthAssessment: String!
+    imageFile: Upload!
+  ): JournalEntry
+  createNotice(
+    title: String
+    subtitle: String
+    body: String!
+    maxViewsCount: Int
+    kind: String!
+    displayModule: String!
+    url: String
+    startDate: String!
+    endDate: String!
+    cta: String
+    priority: Int
+    clientBuildMin: Int
+    clientBuildMax: Int
+    clientPlatform: String
+    roles: [String]
+  ): Notice
+  createParticipantProgram(
+    name: String!
+    details: String!
+    incentives: String
+    requiresApproval: Boolean!
+    enrollmentSteps: [Hash]
+    resources: [Hash]
+  ): ParticipantProgram
+  createPlant(name: String, kind: String): Plant
+  createPlantClassificationImport(source: String!): PlantClassificationImport
+  createReading(
+    serialNumber: String!
+    temperature: Float!
+    moisture: Int!
+    humidity: Int!
+    lightPpfd: Float!
+    lightIr: Int!
+    lightRgb: [Int!]!
+    battery: Int!
+    signal: Int!
+    firmwareVersion: String!
+  ): Message
+  destroyClientVersion(id: String!): ClientVersion
+  destroyJournalEntry(id: String!): JournalEntry
+  destroyNotice(id: ID!): Notice
+  destroyParticipantProgram(id: String!): ParticipantProgram
+  destroyPlant(id: String!): Plant
+  destroyUser(id: String!): Message
+  disconnectSensor(id: String!): Sensor
+  initializePlants: Message
+  login(email: String!, password: String!): AuthType
+  markNotificationsAsRead(ids: [String!]!): [Notification!]
+  optIntoParticipantProgram(
+    participantProgramId: String!
+  ): UserParticipantProgram
+  optOutOfParticipantProgram(
+    participantProgramId: String!
+  ): UserParticipantProgram
+  provisionSensor(serialNumber: String!): KeysAndCertificates
+  recordView(viewableId: String!, viewableType: String!): Message
+  register(
+    firstName: String!
+    lastName: String
+    email: String!
+    timeZone: String!
+    password: String!
+    acceptedTermsAndConditions: Boolean!
+    trialEligible: Boolean
+    serialNumber: String
+    passwordConfirmation: String @deprecated(reason: "No longer required")
+  ): AuthType
+  reportSensorIssue(
+    serialNumber: String!
+    attributes: [String!]!
+    description: String!
+  ): Message
+  resetPassword(token: String!, password: String!): AuthType
+  sendConfirmationInstructions(id: String!): Message
+  sendResetPasswordInstructions(email: String!): Message
+  updateClientVersion(
+    id: String!
+    version: String
+    build: Int
+    releaseDate: String
+    force: Boolean
+  ): ClientVersion
+  updateJournalEntry(
+    id: String!
+    body: String
+    healthAssessment: String
+  ): JournalEntry
+  updateNotice(
+    id: String!
+    title: String
+    subtitle: String
+    body: String
+    maxViewsCount: Int
+    kind: String
+    displayModule: String
+    url: String
+    startDate: String
+    endDate: String
+    cta: String
+    priority: Int
+    clientBuildMin: Int
+    clientBuildMax: Int
+    clientPlatform: String
+    roles: [String]
+  ): Notice
+  updateParticipantProgram(
+    id: String!
+    name: String
+    details: String
+    incentives: String
+    requiresApproval: Boolean
+    status: String
+    enrollmentSteps: [Hash]
+    resources: [Hash]
+  ): ParticipantProgram
+  updatePlant(
+    id: String!
+    name: String
+    kind: String
+    notificationPreferences: PlantNotificationPreferencesInput
+  ): Plant
+  updatePlantAction(id: String!, status: String): PlantAction
+  updatePlantClassification(
+    id: String!
+    moistureRange: [Int!]
+    temperatureRange: [Int!]
+    lightRange: [Float!]
+    humidityRange: [Int!]
+    family: String
+    genus: String
+    preferredName: String
+  ): PlantClassification
+  updatePlantClassificationImport(
+    id: String!
+    state: String
+  ): PlantClassificationImport
+  updateUser(
+    id: String!
+    firstName: String
+    lastName: String
+    email: String
+    ownedPlantsCount: Int
+    acceptedTermsAndConditions: Boolean
+    password: String
+    timeZone: String
+    discordId: String
+    passwordConfirmation: String @deprecated(reason: "No longer required")
+    plantShelfTutorialCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed from client build 83")
+    plantProfileTutorialCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed from client build 83")
+    discoverTutorialCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed from client build 83")
+    postsTutorialCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed from client build 83")
+    plantProfileCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed in favor of Tutorial objects")
+    plantProfileSensorCompletedAt: ISO8601DateTime
+      @deprecated(reason: "Removed in favor of Tutorial objects")
+  ): User
+  updateUserParticipantProgram(
+    id: String!
+    state: String!
+  ): UserParticipantProgram
+}
+
+type Notice implements NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+interface NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+type Notification {
+  createdAt: ISO8601DateTime!
+  deepLinkUrl: String
+  id: ID!
+  isRead: Boolean!
+  message: String!
+  notifiableId: ID
+  notifiableType: String
+  title: String
+  user: User!
+}
+
+"""
+The connection type for Notification.
+"""
+type NotificationConnection {
+  """
+  A list of edges.
+  """
+  edges: [NotificationEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [Notification]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type NotificationEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: Notification
+}
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+}
+
+type ParticipantProgram {
+  details: String!
+  enrollmentSteps: [Hash!]!
+  id: ID!
+  incentives: String
+  name: String!
+  requiresApproval: Boolean!
+  resources: [Hash!]!
+  status: String!
+}
+
+type ParticipantProgramNoticeLinkDiscordAccount implements NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+type Plant {
+  humidityStatus: String!
+  id: ID!
+  journalEntriesCount: Int!
+  kind: String
+  lastAnalyzedAt: ISO8601DateTime
+  lightStatus: String!
+  moistureStatus: String!
+  name: String
+  notificationPreferences: PlantNotificationPreferences!
+  pendingActionsCount: Int!
+  plantActions: [PlantAction!]!
+  plantClassification: PlantClassification
+  sensor: Sensor!
+  statistics: [Hash!]!
+  status: String!
+  temperatureStatus: String!
+}
+
+type PlantAction {
+  id: ID!
+  instructions: [String!]
+  kind: String!
+  prompt: String!
+  severity: String!
+  status: String!
+}
+
+type PlantClassification {
+  careGuide: String
+  commonNames: [String!]!
+  family: String
+  genus: String
+  hasMoreInfo: Boolean!
+  humidityRange: [Int!]!
+  id: ID!
+  illustrationUrl: String!
+  information: String
+  isHanging: Boolean
+  lightRange: [Float!]!
+  moistureRange: [Int!]!
+  name: String!
+  preferredName: String
+  temperatureRange: [Int!]!
+}
+
+"""
+The connection type for PlantClassification.
+"""
+type PlantClassificationConnection {
+  """
+  A list of edges.
+  """
+  edges: [PlantClassificationEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [PlantClassification]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type PlantClassificationEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: PlantClassification
+}
+
+input PlantClassificationFilter {
+  query: String
+  incompleteOnly: Boolean
+}
+
+type PlantClassificationImport {
+  columnMap: [String!]!
+  createdAt: ISO8601DateTime!
+  currentState: String!
+  id: ID!
+  plantClassificationImportRows: [PlantClassificationImportRow!]!
+  source: String!
+}
+
+"""
+The connection type for PlantClassificationImport.
+"""
+type PlantClassificationImportConnection {
+  """
+  A list of edges.
+  """
+  edges: [PlantClassificationImportEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [PlantClassificationImport]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type PlantClassificationImportEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: PlantClassificationImport
+}
+
+type PlantClassificationImportRow {
+  currentState: String!
+  id: ID!
+  plantClassification: PlantClassification
+  rowNumber: Int!
+  values: [String!]!
+}
+
+type PlantNotificationPreferences {
+  batteryAction: Boolean!
+  batteryAlert: Boolean!
+  humidityAlert: Boolean!
+  id: ID!
+  journalAction: Boolean!
+  lightAlert: Boolean!
+  moistureAction: Boolean!
+  moistureAlert: Boolean!
+  temperatureAction: Boolean!
+  temperatureAlert: Boolean!
+}
+
+input PlantNotificationPreferencesInput {
+  batteryAlert: Boolean
+  lightAlert: Boolean
+  moistureAlert: Boolean
+  temperatureAlert: Boolean
+  humidityAlert: Boolean
+  moistureAction: Boolean
+  temperatureAction: Boolean
+  batteryAction: Boolean
+  journalAction: Boolean
+}
+
+type Query {
+  blogPosts: [BlogPost!]!
+  clientConfig: ClientConfig!
+  clientVersion(id: String!): ClientVersion
+  clientVersions: [ClientVersion!]!
+  contentModules: [ContentModule!]!
+  currentNotice(displayModule: String!): NoticeInterface
+  currentUser: User
+  customerPortal: CustomerPortal!
+  findUser(email: String!): String
+  identifyPlant(imageData: String!): PlantClassification
+  instagramPosts: [InstagramPostType!]!
+  journalEntries(
+    plantId: String!
+
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+  ): JournalEntryConnection!
+  journalEntry(id: String!): JournalEntry
+  notice(id: String!): Notice
+  notices: [Notice!]!
+  notifications(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+  ): NotificationConnection!
+  participantProgram(id: String!): ParticipantProgram!
+  participantPrograms: [ParticipantProgram!]!
+  plant(id: String!): Plant
+  plantActions(plantId: String!, status: String): [PlantAction!]!
+  plantClassification(id: String!): PlantClassification
+  plantClassificationImport(id: String!): PlantClassificationImport
+  plantClassificationImports(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+  ): PlantClassificationImportConnection!
+  plantClassifications(
+    filter: PlantClassificationFilter
+
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+  ): PlantClassificationConnection!
+  plants(userId: String): [Plant!]!
+  readings(sensorId: String!): [Reading!]!
+  routes: Routes!
+  sensor(serialNumber: String!): Sensor
+  showHardware(serialNumber: String!): Hardware
+  tiktokPosts: [TikTokPost!]!
+  timeZones: [TimeZone!]!
+  tutorials: [Tutorial!]
+  user(id: String!): User
+  userParticipantPrograms(state: String!): [UserParticipantProgram!]
+  users(
+    filter: UserFilter
+
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+  ): UserConnection!
+}
+
+type Reading {
+  battery: Int!
+  createdAt: ISO8601DateTime!
+  humidity: Int!
+  id: ID!
+  light: Float!
+  moisture: Int!
+  signal: Int!
+  temperature: Int!
+}
+
+type Routes {
+  blogsUrl: String!
+  instagramUrl: String!
+  marketingSiteUrl: String!
+  storeUrl: String!
+  supportUrl: String!
+  termsOfServiceUrl: String!
+  tiktokUrl: String!
+}
+
+type Sensor {
+  firmwareVersion: String
+  humidityRange: [Int!]!
+  humidityStatus: String!
+  id: ID!
+  isActive: Boolean!
+  isConnected: Boolean!
+  lastReading: Reading
+  lightRange: [Float!]!
+  lightStatus: String!
+  moistureRange: [Int!]!
+  moistureStatus: String!
+  plant: Plant!
+  plantId: String!
+  serialNumber: String
+  temperatureRange: [Int!]!
+  temperatureStatus: String!
+}
+
+type Subscription {
+  currentPeriodEnd: String!
+  currentPeriodStart: String!
+  customerId: String!
+  externalId: String!
+  id: ID!
+  isManageable: Boolean!
+  plan: LegacySubscriptionPlan!
+  startDate: String!
+  status: String!
+  user: User!
+}
+
+type SubscriptionsNoticeResubscribe implements NoticeInterface {
+  body: String!
+  clientBuildMax: Int
+  clientBuildMin: Int
+  clientPlatform: String
+  cta: String
+  displayModule: String!
+  endDate: String!
+  id: ID!
+  kind: String!
+  maxViewsCount: Int
+  priority: Int!
+  roles: [String!]!
+  startDate: String!
+  subtitle: String
+  title: String
+  type: String!
+  url: String
+}
+
+type TikTokPost {
+  externalUrl: String!
+  id: ID!
+  imageUrl: String!
+  postedAt: ISO8601DateTime!
+  title: String
+}
+
+type TimeZone {
+  name: String!
+  offset: String!
+  value: String!
+}
+
+type Tutorial {
+  id: ID!
+  key: String!
+  name: String!
+}
+
+scalar Upload
+
+type User {
+  acceptedTermsAndConditions: Boolean!
+  canConnectSensor: Boolean!
+  completedTutorials: [String!]!
+  discordId: String
+  email: String!
+  firstName: String!
+  fullName: String!
+  hasActiveSubscription: Boolean!
+    @deprecated(reason: "Renamed to :hasCurrentSubscription.")
+  hasCurrentSubscription: Boolean!
+  hasUnreadNotifications: Boolean!
+  id: ID!
+  isConfirmed: Boolean!
+  isTrialEligible: Boolean!
+  journalEntriesCount: Int!
+  lastName: String
+  oneSignalHashedId: String!
+  ownedPlantsCount: String
+  plantsCount: Int!
+  roles: [String!]!
+  sensorsCount: Int!
+  subscription: Subscription
+  subscriptionManagementUrl: String
+  timeZone: String!
+  tutorials: UserTutorial!
+  userParticipantPrograms: [UserParticipantProgram!]!
+}
+
+"""
+The connection type for User.
+"""
+type UserConnection {
+  """
+  A list of edges.
+  """
+  edges: [UserEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [User]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type UserEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: User
+}
+
+input UserFilter {
+  query: String
+}
+
+type UserParticipantProgram {
+  currentState: String!
+  hasOptedIn: Boolean!
+  id: ID
+  participantProgram: ParticipantProgram!
+  participantProgramId: ID!
+  user: User!
+  userId: ID!
+}
+
+type UserTutorial {
+  plantProfileSensorViewed: Boolean!
+  plantProfileViewed: Boolean!
+}
