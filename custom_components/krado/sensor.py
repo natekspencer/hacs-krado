@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+import logging
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -19,7 +20,9 @@ from . import KradoConfigEntry
 from .coordinator import KradoCoordinator
 from .entity import KradoEntity
 
-PLANT_MEASUREMENT_STATUS_LIST = ["Low", "Good", "High"]
+_LOGGER = logging.getLogger(__name__)
+
+PLANT_MEASUREMENT_STATUS_LIST = ["low", "good", "high"]
 
 
 async def async_setup_entry(
@@ -177,6 +180,9 @@ class KradoSensorEntity(KradoEntity, SensorEntity):
         value = data[self.entity_description.field]
         if self.device_class == SensorDeviceClass.TIMESTAMP:
             return datetime.fromisoformat(value)
+        if isinstance(value, str):
+            value = value.lower()
         if self.device_class == SensorDeviceClass.ENUM and value not in self.options:
-            return None
+            _LOGGER.warning("%s has an unknown value: %s", self.name, value)
+            self.entity_description.options.append(value)
         return value

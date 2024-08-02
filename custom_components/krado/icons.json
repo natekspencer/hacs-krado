@@ -3,28 +3,28 @@
     "sensor": {
       "humidity_status": {
         "default": "mdi:water-percent-alert",
-        "state": { "Good": "mdi:water-percent" }
+        "state": { "good": "mdi:water-percent" }
       },
       "light": {
         "default": "mdi:weather-sunny"
       },
       "light_status": {
         "default": "mdi:weather-sunny-alert",
-        "state": { "Good": "mdi:weather-sunny" }
+        "state": { "good": "mdi:weather-sunny" }
       },
       "moisture": {
         "default": "mdi:water"
       },
       "moisture_status": {
         "default": "mdi:water-alert",
-        "state": { "Good": "mdi:water" }
+        "state": { "good": "mdi:water" }
       },
       "signal": {
         "default": "mdi:wifi"
       },
       "temperature_status": {
         "default": "mdi:thermometer-alert",
-        "state": { "Good": "mdi:thermometer" }
+        "state": { "good": "mdi:thermometer" }
       }
     }
   }

@@ -43,15 +43,27 @@
   },
   "entity": {
     "sensor": {
-      "humidity_status": { "name": "Humidity status" },
+      "humidity_status": {
+        "name": "Humidity status",
+        "state": { "low": "Low", "good": "Good", "high": "High" }
+      },
       "last_analyzed": { "name": "Last analyzed" },
       "last_reading": { "name": "Last reading" },
       "light": { "name": "Light" },
-      "light_status": { "name": "Light status" },
+      "light_status": {
+        "name": "Light status",
+        "state": { "low": "Low", "good": "Good", "high": "High" }
+      },
       "moisture": { "name": "Moisture" },
-      "moisture_status": { "name": "Moisture status" },
+      "moisture_status": {
+        "name": "Moisture status",
+        "state": { "low": "Low", "good": "Good", "high": "High" }
+      },
       "signal": { "name": "Signal" },
-      "temperature_status": { "name": "Temperature status" }
+      "temperature_status": {
+        "name": "Temperature status",
+        "state": { "low": "Low", "good": "Good", "high": "High" }
+      }
     }
   }
 }
