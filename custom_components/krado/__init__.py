@@ -8,7 +8,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_TOKEN, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers.device_registry import DeviceEntry
 
+from .const import DOMAIN
 from .coordinator import KradoCoordinator
 from .pykrado import Krado
 
@@ -46,3 +48,16 @@ async def async_unload_entry(hass: HomeAssistant, entry: KradoConfigEntry) -> bo
     """Unload a config entry."""
     await entry.runtime_data.client.close()
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant, entry: KradoConfigEntry, device_entry: DeviceEntry
+) -> bool:
+    """Remove a config entry from a device."""
+    return not any(
+        identifier
+        for identifier in device_entry.identifiers
+        if identifier[0] == DOMAIN
+        for plant in entry.runtime_data.data
+        if plant["id"] == identifier[1]
+    )
