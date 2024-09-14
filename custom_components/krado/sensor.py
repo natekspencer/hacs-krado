@@ -178,6 +178,8 @@ class KradoSensorEntity(KradoEntity, SensorEntity):
         if self.entity_description.is_reading:
             data = data["sensor"]["lastReading"]
         value = data[self.entity_description.field]
+        if value is None:
+            return value
         if self.device_class == SensorDeviceClass.TIMESTAMP:
             return datetime.fromisoformat(value)
         if isinstance(value, str):
