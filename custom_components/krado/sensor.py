@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import logging
 
 from homeassistant.components.sensor import (
@@ -12,9 +12,15 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTemperature
+from homeassistant.const import (
+    PERCENTAGE,
+    EntityCategory,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_track_time_interval
 
 from . import KradoConfigEntry
 from .coordinator import KradoCoordinator
@@ -151,6 +157,16 @@ DESCRIPTORS = (
         entity_category=EntityCategory.DIAGNOSTIC,
         options=PLANT_MEASUREMENT_STATUS_LIST,
     ),
+    KradoSensorEntityDescription(
+        key="time_since_last_reading",
+        field="createdAt",
+        translation_key="time_since_last_reading",
+        device_class=SensorDeviceClass.DURATION,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        suggested_unit_of_measurement=UnitOfTime.HOURS,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
 )
 
 
@@ -180,6 +196,10 @@ class KradoSensorEntity(KradoEntity, SensorEntity):
         value = data[self.entity_description.field]
         if value is None:
             return value
+        if self.device_class == SensorDeviceClass.DURATION:
+            return (
+                datetime.now(timezone.utc) - datetime.fromisoformat(value)
+            ).total_seconds()
         if self.device_class == SensorDeviceClass.TIMESTAMP:
             return datetime.fromisoformat(value)
         if isinstance(value, str):
@@ -188,3 +208,17 @@ class KradoSensorEntity(KradoEntity, SensorEntity):
             _LOGGER.warning("%s has an unknown value: %s", self.name, value)
             self.entity_description.options.append(value)
         return value
+
+    async def async_added_to_hass(self) -> None:
+        self._handle_coordinator_update()
+        await super().async_added_to_hass()
+        if self.device_class == SensorDeviceClass.DURATION:
+            self.async_on_remove(
+                async_track_time_interval(
+                    self.hass, self._update_entity_state, timedelta(minutes=1)
+                )
+            )
+
+    async def _update_entity_state(self, now: datetime | None = None) -> None:
+        """Update the state of the entity."""
+        self._handle_coordinator_update()
