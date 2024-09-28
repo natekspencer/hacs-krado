@@ -63,7 +63,8 @@
       "temperature_status": {
         "name": "Temperature status",
         "state": { "low": "Low", "good": "Good", "high": "High" }
-      }
+      },
+      "time_since_last_reading": { "name": "Time since last reading" }
     }
   }
 }
