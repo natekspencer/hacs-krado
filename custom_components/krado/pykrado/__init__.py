@@ -10,6 +10,8 @@ from .const import GRAPHQL_ENDPOINT, GRAPHQL_SCHEMA
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_HEADERS = {"client_build": "152"}
+
 
 class Krado:
     """Krado API client class."""
@@ -21,7 +23,8 @@ class Krado:
         self._token = token
         transport = AIOHTTPTransport(
             url=GRAPHQL_ENDPOINT,
-            headers={"Authorization": f"Bearer {self._token}"} if token else {},
+            headers=({"Authorization": f"Bearer {self._token}"} if token else {})
+            | DEFAULT_HEADERS,
         )
         self._client = Client(schema=GRAPHQL_SCHEMA, transport=transport)
 
@@ -53,7 +56,7 @@ class Krado:
         self._token = result["login"]["token"]
         cast(AIOHTTPTransport, self._client.transport).headers = {
             "Authorization": f"Bearer {self._token}"
-        }
+        } | DEFAULT_HEADERS
 
     async def query_plants(self) -> list[dict[str, Any]]:
         """Query plants."""
